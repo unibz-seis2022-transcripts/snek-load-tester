@@ -53,7 +53,7 @@ const run = (async () => {
 
   const browser = await puppeteer.launch({
     headless: false,
-    executablePath: '/usr/bin/chromium-browser',
+    executablePath: getConfig().chromiumExecutablePath,
   });
 
   const promises = createPromises(browser);
