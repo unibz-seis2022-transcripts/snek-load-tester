@@ -23,6 +23,11 @@ const connectPlayer = async (browser: Browser, playerConfig: PlayerConfig) => {
 
   const page = await browser.newPage();
 
+  page.on('dialog', async (dialog) => {
+    console.log('Received alert: ', dialog.message());
+    trackDisconnectedPlayer();
+  });
+
   // TODO (LS-2023-05-17): Make sure that interactions are executed even with tab unfocused
   await page.bringToFront();
   await page.goto(url);
