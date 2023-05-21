@@ -16,8 +16,6 @@ const getConfig = () => {
   return {
     chromiumExecutablePath: getEnvValue('CHROMIUM_EXECUTABLE_PATH'),
     url: getEnvValue('URL'),
-    playerCount: +getEnvValue('PLAYER_COUNT'),
-    connectDelayMs: +getEnvValue('CONNECT_DELAY_MS'),
   };
 };
 

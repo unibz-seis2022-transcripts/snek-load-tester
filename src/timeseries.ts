@@ -7,6 +7,7 @@ type DataPoint = {
 
 const dataPoints: DataPoint[] = [];
 let currentPlayerCount = 0;
+let timer: NodeJS.Timer;
 
 export const addDataPoint = () => {
   const dataPoint: DataPoint = {
@@ -52,4 +53,10 @@ export const writeDataPointsToCsv = () => {
       console.log(`CSV file "${filename}" has been saved.`);
     }
   });
+};
+
+timer = setInterval(addDataPoint, 10000);
+
+export const endTimeTrackingInterval = () => {
+  clearInterval(timer);
 };

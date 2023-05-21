@@ -3,20 +3,23 @@ import puppeteer, { Browser } from 'puppeteer';
 import * as dotenv from 'dotenv';
 import getConfig from './config.js';
 import {
+  endTimeTrackingInterval,
   trackConnectedPlayer,
   trackDisconnectedPlayer,
   writeDataPointsToCsv,
 } from './timeseries.js';
+import { PlayerConfig, demoPlayers } from './playerConfig.js';
 
-const connectPlayer = async (
-  browser: Browser,
-  connectDelayMs: number,
-  playerName: string = 'testplayer',
-) => {
-  console.log('Connect new player, delay is ', connectDelayMs);
+const connectPlayer = async (browser: Browser, playerConfig: PlayerConfig) => {
+  const playerName = playerConfig.name || 'testplayer';
+  const { connectDelay, disconnectDelay } = playerConfig;
+
+  console.log(
+    `Add player ${playerName}, connect delay: ${connectDelay}, disconnect delay: ${disconnectDelay}`,
+  );
   const url = getConfig().url;
 
-  await new Promise((r) => setTimeout(r, connectDelayMs));
+  await new Promise((r) => setTimeout(r, connectDelay));
 
   const page = await browser.newPage();
 
@@ -28,7 +31,7 @@ const connectPlayer = async (
   console.log('Player connected');
   trackConnectedPlayer();
 
-  await new Promise((r) => setTimeout(r, 10000));
+  await new Promise((r) => setTimeout(r, disconnectDelay));
 
   await page.close();
 
@@ -37,13 +40,9 @@ const connectPlayer = async (
 };
 
 const createPromises = (browser: Browser) => {
-  const promises: Promise<void>[] = [];
-  let cumulativeConnectDelay = 0;
-  for (let i = 0; i < getConfig().playerCount; i++) {
-    const promise = connectPlayer(browser, cumulativeConnectDelay);
-    promises.push(promise);
-    cumulativeConnectDelay += getConfig().connectDelayMs;
-  }
+  const promises: Promise<void>[] = demoPlayers.map((player) =>
+    connectPlayer(browser, player),
+  );
 
   return promises;
 };
@@ -54,6 +53,7 @@ const run = (async () => {
   const browser = await puppeteer.launch({
     headless: false,
     executablePath: getConfig().chromiumExecutablePath,
+    args: ['--disable-dev-shm-usage'],
   });
 
   const promises = createPromises(browser);
@@ -61,6 +61,7 @@ const run = (async () => {
   await Promise.all(promises);
   await browser.close();
   writeDataPointsToCsv();
+  endTimeTrackingInterval();
 })();
 
 export default run;
