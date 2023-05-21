@@ -8,7 +8,7 @@ import {
   trackDisconnectedPlayer,
   writeDataPointsToCsv,
 } from './timeseries.js';
-import { PlayerConfig, demoPlayers } from './playerConfig.js';
+import { PlayerConfig, multiInstancePlayers } from './playerConfig.js';
 
 const connectPlayer = async (browser: Browser, playerConfig: PlayerConfig) => {
   const playerName = playerConfig.name || 'testplayer';
@@ -45,7 +45,7 @@ const connectPlayer = async (browser: Browser, playerConfig: PlayerConfig) => {
 };
 
 const createPromises = (browser: Browser) => {
-  const promises: Promise<void>[] = demoPlayers.map((player) =>
+  const promises: Promise<void>[] = multiInstancePlayers.map((player) =>
     connectPlayer(browser, player),
   );
 
