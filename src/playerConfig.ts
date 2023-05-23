@@ -6,7 +6,7 @@ export type PlayerConfig = {
 
 const getMinutesAsMillis = (minutes: number): number => minutes * 60 * 1000;
 
-export const demoPlayers: PlayerConfig[] = [
+export const firstSeriesPlayers: PlayerConfig[] = [
   { connectDelay: 1000, disconnectDelay: getMinutesAsMillis(10) },
   { connectDelay: 2000, disconnectDelay: getMinutesAsMillis(10) },
   { connectDelay: 3000, disconnectDelay: getMinutesAsMillis(10) },
@@ -17,7 +17,7 @@ export const demoPlayers: PlayerConfig[] = [
   { connectDelay: 8000, disconnectDelay: getMinutesAsMillis(10) },
 ];
 
-export const multiInstancePlayers: PlayerConfig[] = [
+export const secondSeriesPlayers: PlayerConfig[] = [
   { connectDelay: 0, disconnectDelay: getMinutesAsMillis(20) },
   { connectDelay: 2000, disconnectDelay: getMinutesAsMillis(20) },
   { connectDelay: 4000, disconnectDelay: getMinutesAsMillis(20) },
